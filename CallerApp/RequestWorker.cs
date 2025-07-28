@@ -18,7 +18,7 @@ namespace CallerApp
             {
                 try
                 {
-                    await client.GetAsync("http://processor-api/process");
+                    await client.GetAsync("http://processorapi/process");
                 }
                 catch (Exception ex)
                 {

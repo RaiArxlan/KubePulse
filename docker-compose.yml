@@ -1,30 +1,43 @@
-﻿version: '3.8'
 services:
-  postgres:
-    image: postgres:16
-    environment:
-      POSTGRES_DB: requests
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: secret
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
+    postgres:
+        image: postgres:latest
+        environment:
+          POSTGRES_DB: RequestsDb
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: YourStrong@Passw0rd
+        volumes:
+          - pgdata:/var/lib/postgresql/data
+        ports:
+          - 5432:5432
+    
+    callerapp:
+        image: ${DOCKER_REGISTRY-}callerapp
+        build:
+            context: .
+            dockerfile: CallerApp/Dockerfile
+        depends_on:
+            - postgres
 
-  processor-api:
-    build: ./ProcessorApi
-    environment:
-      - ASPNETCORE_URLS=http://+:80
-      - ConnectionStrings__DefaultConnection=Host=postgres;Database=requests;Username=admin;Password=secret
-    depends_on:
-      - postgres
+    processorapi:
+        image: ${DOCKER_REGISTRY-}processorapi
+        build:
+            context: .
+            dockerfile: ProcessorApi/Dockerfile
+        depends_on:
+            - postgres
 
-  caller-app:
-    build: ./CallerApp
-    environment:
-      - ASPNETCORE_URLS=http://+:80
-    depends_on:
-      - processor-api
+    pgadmin:
+        image: dpage/pgadmin4
+        environment:
+          - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+          - PGADMIN_DEFAULT_PASSWORD=admin
+        ports:
+          - "8085:80"
+        volumes:
+          - pgadmin-data:/var/lib/pgadmin
+        depends_on:
+          - postgres
 
 volumes:
-  pgdata:
+    pgdata:
+    pgadmin-data:

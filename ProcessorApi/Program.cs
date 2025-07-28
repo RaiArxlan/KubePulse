@@ -3,8 +3,13 @@ using ProcessorApi.Models;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 var builder = WebApplication.CreateBuilder(args);
+var isDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
+var connectionString = isDocker
+    ? builder.Configuration.GetConnectionString("DockerConnectionString")
+    : builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddDbContext<RequestDbContext>(opt =>
-    opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    opt.UseNpgsql(connectionString));
 builder.Services.AddControllers();
 var app = builder.Build();
 app.MapGet("/process", async (RequestDbContext db) =>

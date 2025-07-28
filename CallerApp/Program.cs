@@ -1,36 +1,18 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-namespace CallerApp
-{
-    public class Program
-    {
-        public static void Main(string[] args) => CreateHostBuilder(args).Build().Run();
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(web =>
-                {
-                    web.UseStartup<Startup>();
-                });
-    }
+﻿using CallerApp;
 
-    public class Startup
-    {
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddRazorPages().AddRazorRuntimeCompilation();
-            services.AddHttpClient();
-            services.AddSingleton<RequestWorker>();
-            services.AddHostedService(p => p.GetRequiredService<RequestWorker>());
-        }
-        public void Configure(IApplicationBuilder app)
-        {
-            app.UseRouting();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapRazorPages();
-            });
-        }
-    }
-}
+var builder = WebApplication.CreateBuilder(args);
+
+// Services
+builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+builder.Services.AddHttpClient();
+builder.Services.AddSingleton<RequestWorker>();
+builder.Services.AddHostedService(sp => sp.GetRequiredService<RequestWorker>());
+
+var app = builder.Build();
+
+// Middleware
+app.UseStaticFiles();
+app.UseRouting();
+app.MapRazorPages();
+
+app.Run();

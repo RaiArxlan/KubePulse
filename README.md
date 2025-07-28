@@ -67,7 +67,7 @@
 
 * The **CallerApp** Razor Pages UI lets you set how often GET requests are sent.
 * Requests hit the **ProcessorApi**, which:
-  * Logs `start_time` and `end_time` in the database
+  * Logs `StartTime` and `EndTime` in the database
   * Waits for a random delay (0–5 seconds) to simulate load
 * Kubernetes HPA automatically scales the `processor-api` deployment based on CPU usage
 
@@ -75,13 +75,14 @@
 
 ## 🗃️ Database Schema
 
-    CREATE TABLE request_logs (
-        id UUID PRIMARY KEY,
-        start_time TIMESTAMP NOT NULL,
-        end_time TIMESTAMP,
-        source_service TEXT
+    CREATE TABLE RequestLogs (
+        Id UUID PRIMARY KEY,
+        StartTime TIMESTAMP NOT NULL,
+        EndTime TIMESTAMP,
+        SourceService TEXT
     );
-    
+
+Please note that this table is created by EF Migrations.
 
 * * *
 
