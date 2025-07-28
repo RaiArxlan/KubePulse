@@ -1,0 +1,30 @@
+﻿version: '3.8'
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: requests
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+  processor-api:
+    build: ./ProcessorApi
+    environment:
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=requests;Username=admin;Password=secret
+    depends_on:
+      - postgres
+
+  caller-app:
+    build: ./CallerApp
+    environment:
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - processor-api
+
+volumes:
+  pgdata:

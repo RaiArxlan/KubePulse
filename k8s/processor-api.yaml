@@ -1,0 +1,34 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: processor-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: processor-api }
+  template:
+    metadata:
+      labels: { app: processor-api }
+    spec:
+      containers:
+      - name: processor-api
+        image: kubepulse/processor-api:latest
+        ports: [{ containerPort: 80 }]
+        env:
+        - name: ASPNETCORE_URLS
+          value: http://+:80
+        - name: ConnectionStrings__DefaultConnection
+          value: Host=postgres;Database=requests;Username=admin;Password=secret
+        resources:
+          requests: { cpu: \"100m\" }
+          limits: { cpu: \"300m\" }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: processor-api
+spec:
+  selector:
+    app: processor-api
+  ports:
+    - port: 80

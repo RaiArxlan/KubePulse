@@ -1,0 +1,21 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: caller-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: caller-app }
+  template:
+    metadata:
+      labels: { app: caller-app }
+    spec:
+      containers:
+      - name: caller-app
+        image: kubepulse/caller-app:latest
+        ports: [{ containerPort: 80 }]
+        env:
+        - name: ASPNETCORE_URLS
+          value: http://+:80
+        resources:
+          requests: { cpu: \"100m\" }

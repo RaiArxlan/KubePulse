@@ -1,0 +1,7 @@
+﻿@page
+@model ControlModel
+<form method="post">
+  <label>Interval (seconds):</label>
+  <input type="number" asp-for="Interval" min="1" value="5"/>
+  <button type="submit">Update</button>
+</form>
