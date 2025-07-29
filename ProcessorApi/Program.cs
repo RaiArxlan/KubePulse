@@ -26,4 +26,11 @@ app.MapGet("/process", async (RequestDbContext db) =>
 
     return Results.Ok(log.Id);
 });
+
+app.MapGet("/logs", async (RequestDbContext db) =>
+{
+    var logs = await db.RequestLogs.OrderByDescending(x => x.StartTime).Take(50).ToListAsync();
+    return Results.Ok(logs);
+});
+
 app.Run();

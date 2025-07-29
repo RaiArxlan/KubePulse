@@ -1,7 +1,21 @@
 ﻿@page
 @model ControlModel
 <form method="post">
-  <label>Interval (seconds):</label>
-  <input type="number" asp-for="Interval" min="1" value="5"/>
-  <button type="submit">Update</button>
+    <label>Interval (seconds):</label>
+    <input type="number" asp-for="Interval" min="1" value="5" />
+    <input type="text" asp-for="ServiceUrl" placeholder="http://localhost:7081/process or http://processorapi/process" />
+    <button type="submit">Update</button>
 </form>
+
+<span>
+    Service Status: @{
+    if (Model.IsRunningSuccessfully)
+    {
+        <span class="text-success">Running</span>
+    }
+    else
+    {
+        <span class="text-danger">Not Running</span>
+    }
+        }
+</span>

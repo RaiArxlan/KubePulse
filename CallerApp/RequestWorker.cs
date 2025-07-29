@@ -9,8 +9,12 @@ namespace CallerApp
     {
         private readonly IHttpClientFactory _factory;
         private int _interval = 5;
+        private string _url = "http://localhost:61107/process";
+        private bool _isRunning = false;
         public RequestWorker(IHttpClientFactory factory) => _factory = factory;
         public void SetInterval(int sec) => _interval = sec;
+        public void SetUrl(string url) => _url = url;
+        public bool IsRunningSuccessfully() => _isRunning;
         protected override async Task ExecuteAsync(CancellationToken token)
         {
             var client = _factory.CreateClient();
@@ -18,11 +22,13 @@ namespace CallerApp
             {
                 try
                 {
-                    await client.GetAsync("http://processorapi/process");
+                    await client.GetAsync(_url);
+                    _isRunning = true;
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error occurred: {ex.Message}");
+                    _isRunning = false;
                 }
                 await Task.Delay(_interval * 1000, token);
             }

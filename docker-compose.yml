@@ -15,8 +15,6 @@ services:
         build:
             context: .
             dockerfile: CallerApp/Dockerfile
-        depends_on:
-            - postgres
 
     processorapi:
         image: ${DOCKER_REGISTRY-}processorapi
