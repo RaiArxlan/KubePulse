@@ -15,4 +15,4 @@ app.UseStaticFiles();
 app.UseRouting();
 app.MapRazorPages();
 
-app.Run();
+await app.RunAsync();

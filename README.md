@@ -75,12 +75,14 @@
 
 ## 🗃️ Database Schema
 
-    CREATE TABLE RequestLogs (
-        Id UUID PRIMARY KEY,
-        StartTime TIMESTAMP NOT NULL,
-        EndTime TIMESTAMP,
-        SourceService TEXT
-    );
+```SQL
+CREATE TABLE "RequestLogs" (
+    "Id" UUID PRIMARY KEY,
+    "StartTime" TIMESTAMP NOT NULL,
+    "EndTime" TIMESTAMP,
+    "SourceService" TEXT
+);
+```
 
 Please note that this table is created by EF Migrations.
 
