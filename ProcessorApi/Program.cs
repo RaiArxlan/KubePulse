@@ -10,6 +10,11 @@ var connectionString = isDocker
 builder.Services.AddDbContext<RequestDbContext>(opt =>
 	opt.UseNpgsql(connectionString));
 builder.Services.AddControllers();
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+	serverOptions.ListenAnyIP(8080); // <-- match Docker and k8s
+});
+
 var app = builder.Build();
 
 app.UseCors();

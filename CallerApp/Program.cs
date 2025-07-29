@@ -7,7 +7,10 @@ builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<RequestWorker>();
 builder.Services.AddHostedService(sp => sp.GetRequiredService<RequestWorker>());
-
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+	serverOptions.ListenAnyIP(8080); // <-- match Docker and k8s
+});
 var app = builder.Build();
 
 // Middleware

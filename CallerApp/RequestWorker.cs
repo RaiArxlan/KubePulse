@@ -5,7 +5,7 @@ public class RequestWorker : BackgroundService
     private readonly IHttpClientFactory _factory;
     private int _interval = 5;
     private int _burstCount = 1;
-    private string _url = "http://processorapi:8080/process";
+    private string _url = "http://processor-api:80/process"; // Kubernetes DNS and Service port
     private bool _isRunning = false;
     private volatile bool _paused = false;
 
