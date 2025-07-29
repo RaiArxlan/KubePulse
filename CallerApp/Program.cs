@@ -9,7 +9,7 @@ builder.Services.AddSingleton<RequestWorker>();
 builder.Services.AddHostedService(sp => sp.GetRequiredService<RequestWorker>());
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
-	serverOptions.ListenAnyIP(8080); // <-- match Docker and k8s
+	serverOptions.ListenAnyIP(8080);
 });
 var app = builder.Build();
 

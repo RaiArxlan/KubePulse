@@ -12,7 +12,7 @@ builder.Services.AddDbContext<RequestDbContext>(opt =>
 builder.Services.AddControllers();
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
-	serverOptions.ListenAnyIP(8080); // <-- match Docker and k8s
+	serverOptions.ListenAnyIP(8080);
 });
 
 var app = builder.Build();

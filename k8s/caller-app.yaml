@@ -18,13 +18,9 @@ spec:
           imagePullPolicy: Never
           ports:
             - containerPort: 80
-          env:
-            - name: ASPNETCORE_URLS
-              value: http://+:80
           resources:
             requests:
               cpu: "100m"
-
 ---
 apiVersion: v1
 kind: Service
@@ -36,4 +32,5 @@ spec:
     app: caller-app
   ports:
     - port: 80
-      targetPort: 80
+      targetPort: 8080
+      nodePort: 30080
