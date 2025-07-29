@@ -1,21 +1,62 @@
 ﻿@page
 @model ControlModel
-<form method="post">
-    <label>Interval (seconds):</label>
-    <input type="number" asp-for="Interval" min="1" value="5" />
-    <input type="text" asp-for="ServiceUrl" placeholder="https://localhost:7081/process or http://processorapi:8080/process" />
-    <button type="submit">Update</button>
-</form>
+@{
+    ViewData["Title"] = "Traffic Generator Control";
+}
 
-<span>
-    Service Status: @{
-    if (Model.IsRunningSuccessfully)
-    {
-        <span class="text-success">Running</span>
-    }
-    else
-    {
-        <span class="text-danger">Not Running</span>
-    }
-        }
-</span>
+<div class="container py-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">🔁 KubePulse Traffic Controller</h4>
+        </div>
+        <div class="card-body">
+
+            <form method="post" class="row g-3">
+                <div class="col-md-4">
+                    <label asp-for="Interval" class="form-label">Interval (seconds)</label>
+                    <input type="number" asp-for="Interval" class="form-control" min="1" />
+                </div>
+
+                <div class="col-md-4">
+                    <label asp-for="BurstCount" class="form-label">Burst Count</label>
+                    <input type="number" asp-for="BurstCount" class="form-control" min="1" />
+                </div>
+
+                <div class="col-md-12">
+                    <label asp-for="ServiceUrl" class="form-label">Target Service URL</label>
+                    <input type="text" asp-for="ServiceUrl" class="form-control" />
+                </div>
+
+                <div class="col-md-12 text-end">
+                    <button type="submit" class="btn btn-success me-2" name="update">💾 Update Settings</button>
+                    @if (Model.IsPaused)
+                    {
+                        <button type="submit" class="btn btn-outline-primary" name="start">🟢 Start</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-outline-danger" name="stop">🔴 Stop</button>
+                    }
+                </div>
+            </form>
+
+            <hr class="my-4" />
+
+            <div class="alert @(Model.IsRunningSuccessfully ? "alert-success" : "alert-danger")" role="alert">
+                <strong>Service Status:</strong>
+                @if (Model.IsRunningSuccessfully)
+                {
+                    <span>Running and sending requests...</span>
+                }
+                else if (Model.IsPaused)
+                {
+                    <span>Paused by user</span>
+                }
+                else
+                {
+                    <span>Stopped or unreachable</span>
+                }
+            </div>
+        </div>
+    </div>
+</div>
