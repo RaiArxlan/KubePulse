@@ -10,7 +10,7 @@ namespace CallerApp.Pages
         public int Interval { get; set; } = 5;
 
         [BindProperty]
-        public string ServiceUrl { get; set; } = "http://localhost:7081/process";
+        public string ServiceUrl { get; set; } = "http://localhost:8080/process";
 
         [BindProperty]
         public bool IsRunningSuccessfully { get; private set; } = false;

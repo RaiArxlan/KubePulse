@@ -9,7 +9,7 @@ namespace CallerApp
     {
         private readonly IHttpClientFactory _factory;
         private int _interval = 5;
-        private string _url = "http://localhost:61107/process";
+        private string _url = "http://localhost:8080/process";
         private bool _isRunning = false;
         public RequestWorker(IHttpClientFactory factory) => _factory = factory;
         public void SetInterval(int sec) => _interval = sec;
