@@ -28,6 +28,10 @@ kubectl apply -f k8s/caller-app.yaml
 Write-Host "`nDeploying Horizontal Pod Autoscaler..."
 kubectl apply -f k8s/hpa.yaml
 
+# --- Apply Ingress ---
+Write-Host "`nDeploying Ingress Controller..."
+kubectl apply -f k8s/ingress.yaml
+
 # --- Restart Services ---
 Write-Host "`nRestarting Deployments..."
 kubectl rollout restart deployment caller-app
@@ -57,4 +61,7 @@ Write-Host "`nStarting pgAdmin..."
 Start-Job { minikube service pgadmin }
 
 # Informing user about application start
-Write-Host "`nApplication is running. You can access it via the Minikube service URLs."
+Write-Host "`nAccess your services via:"
+Write-Host "  http://kubepulse.local/caller"
+Write-Host "  http://kubepulse.local/processor"
+Write-Host "  http://kubepulse.local/pgadmin"

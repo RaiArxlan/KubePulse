@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+    - host: kubepulse.local
+      http:
+        paths:
+          - path: /caller(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: caller-app
+                port:
+                  number: 80
+          - path: /processor(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: processor-api
+                port:
+                  number: 80
+          - path: /pgadmin(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: pgadmin-service
+                port:
+                  number: 80

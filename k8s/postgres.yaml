@@ -2,18 +2,33 @@
 kind: PersistentVolumeClaim
 metadata:
   name: pg-pvc
+  labels:
+    app: postgres
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
-
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-secret
+  labels:
+    app: postgres
+type: Opaque
+stringData:
+  POSTGRES_DB: RequestsDb
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: YourStrong@Passw0rd
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres
+  labels:
+    app: postgres
 spec:
   replicas: 1
   selector:
@@ -29,30 +44,36 @@ spec:
           image: postgres:latest
           ports:
             - containerPort: 5432
-          env:
-            - name: POSTGRES_DB
-              value: RequestsDb
-            - name: POSTGRES_USER
-              value: postgres
-            - name: POSTGRES_PASSWORD
-              value: YourStrong@Passw0rd
+          envFrom:
+            - secretRef:
+                name: postgres-secret
           volumeMounts:
-            - name: data
+            - name: pgdata
               mountPath: /var/lib/postgresql/data
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+
       volumes:
-        - name: data
+        - name: pgdata
           persistentVolumeClaim:
             claimName: pg-pvc
-
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: postgres
+  labels:
+    app: postgres
 spec:
   selector:
     app: postgres
   ports:
-    - port: 5432
+    - name: postgres
+      port: 5432
       targetPort: 5432
   type: ClusterIP
