@@ -12,12 +12,13 @@
 
 ## 📁 Project Structure
 
-    KubePulse/
-    ├── CallerApp/         # Razor Pages frontend that generates requests
-    ├── ProcessorApi/      # Minimal API backend that simulates processing delay
-    ├── k8s/               # Kubernetes manifests (deployments, services, HPA)
-    └── README.md
-    
+```text
+KubePulse/
+├── CallerApp/         # Razor Pages frontend that generates requests
+├── ProcessorApi/      # Minimal API backend that simulates processing delay
+├── k8s/               # Kubernetes manifests (deployments, services, HPA)
+└── README.md
+```
 
 * * *
 
@@ -36,30 +37,34 @@
 
 #### 1\. Start Minikube
 
-    minikube start
-    minikube addons enable metrics-server
-    
+```powershell
+minikube start --driver=docker
+minikube addons enable metrics-server
+```
 
 #### 2\. Build Docker Images Inside Minikube
 
-    eval $(minikube docker-env)
-    
-    docker build -t kubepulse/caller-app:latest ./CallerApp
-    docker build -t kubepulse/processor-api:latest ./ProcessorApi
-    
+```powershell
+& minikube -p minikube docker-env | Invoke-Expression
+
+docker build -t kubepulse/caller-app:latest ./CallerApp
+docker build -t kubepulse/processor-api:latest ./ProcessorApi
+```
 
 #### 3\. Apply Kubernetes Resources
 
-    kubectl apply -f k8s/postgres.yaml
-    kubectl apply -f k8s/processor-api.yaml
-    kubectl apply -f k8s/caller-app.yaml
-    kubectl apply -f k8s/hpa.yaml
-    
+```powershell
+kubectl apply -f k8s/postgres.yaml
+kubectl apply -f k8s/processor-api.yaml
+kubectl apply -f k8s/caller-app.yaml
+kubectl apply -f k8s/hpa.yaml
+```
 
 #### 4\. Access the UI
 
-    minikube service caller-app
-    
+```powershell
+minikube service caller-app
+```
 
 * * *
 
@@ -90,9 +95,10 @@ Please note that this table is created by EF Migrations.
 
 ## 📈 Observability
 
-    kubectl get hpa
-    kubectl get pods -w
-    
+```powershell
+kubectl get hpa
+kubectl get pods -w
+```
 
 * * *
 
