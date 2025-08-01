@@ -17,6 +17,10 @@ kubectl apply -f k8s/postgres.yaml
 Write-Host "`n[+] Deploying pgAdmin..."
 kubectl apply -f k8s/pgadmin.yaml
 
+# --- Deploy LoadBalancer Service ---
+Write-Host "`n[+] Deploying LoadBalancer service for caller-app..."
+kubectl apply -f k8s/loadbalancer.yaml
+
 # --- Deploy Applications ---
 Write-Host "`n[+] Deploying processor-api and caller-app..."
 kubectl apply -f k8s/processor-api.yaml
