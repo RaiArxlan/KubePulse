@@ -41,7 +41,8 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres:latest
+          image: postgres:16
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5432
           envFrom:
@@ -57,11 +58,11 @@ spec:
             limits:
               cpu: "500m"
               memory: "1Gi"
-
       volumes:
         - name: pgdata
-          persistentVolumeClaim:
-            claimName: pg-pvc
+          emptyDir: {} # dev only, comment this in prod
+          # persistentVolumeClaim: # prod only, uncomment this in prod
+          #   claimName: pg-pvc
 ---
 apiVersion: v1
 kind: Service

@@ -40,11 +40,11 @@ kubectl rollout restart deployment postgres
 kubectl rollout restart deployment pgadmin
 
 # --- Wait for Pods ---
-Write-Host "`nWaiting for pods to be ready..."
-kubectl wait --for=condition=ready pod -l app=caller-app --timeout=60s
-kubectl wait --for=condition=ready pod -l app=processor-api --timeout=60s
-kubectl wait --for=condition=ready pod -l app=postgres --timeout=60s
-kubectl wait --for=condition=ready pod -l app=pgadmin --timeout=60s
+# Write-Host "`nWaiting for pods to be ready..."
+# kubectl wait --for=condition=ready pod -l app=caller-app --timeout=60s
+# kubectl wait --for=condition=ready pod -l app=processor-api --timeout=60s
+# kubectl wait --for=condition=ready pod -l app=postgres --timeout=60s
+# kubectl wait --for=condition=ready pod -l app=pgadmin --timeout=60s
 
 Write-Host "`nAll services deployed successfully!"
 
@@ -53,15 +53,15 @@ Write-Host "`nStarting Minikube dashboard..."
 Start-Job { minikube dashboard }
 
 # --- Start Caller App ---
-Write-Host "`nStarting Caller App..."
-Start-Job { minikube service caller-app }
+# Write-Host "`nStarting Caller App..."
+# Start-Job { minikube service caller-app }
 
 # --- Start pgAdmin ---
-Write-Host "`nStarting pgAdmin..."
-Start-Job { minikube service pgadmin }
+# Write-Host "`nStarting pgAdmin..."
+# Start-Job { minikube service pgadmin }
 
 # Informing user about application start
-Write-Host "`nAccess your services via:"
-Write-Host "  http://kubepulse.local/caller"
-Write-Host "  http://kubepulse.local/processor"
-Write-Host "  http://kubepulse.local/pgadmin"
+# Write-Host "`nAccess your services via:"
+# Write-Host "  http://kubepulse.local/caller"
+# Write-Host "  http://kubepulse.local/processor"
+# Write-Host "  http://kubepulse.local/pgadmin"
