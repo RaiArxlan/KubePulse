@@ -4,6 +4,12 @@ $ErrorActionPreference = "Stop"
 Write-Host "`n[+] Configuring Docker to use Minikube environment..."
 & minikube -p minikube docker-env --shell=powershell | Invoke-Expression
 
+Write-Host "`n[+] Enabling Ingress addon..."
+minikube addons enable ingress
+
+Write-Host "`n[+] Enabling Metrics Server addon..."
+minikube addons enable metrics-server
+
 # --- Build Docker Images ---
 Write-Host "`n[+] Building Docker images for caller-app and processor-api..."
 docker build -t kubepulse/caller-app:latest ./CallerApp
@@ -16,10 +22,6 @@ kubectl apply -f k8s/postgres.yaml
 # --- Deploy pgAdmin ---
 Write-Host "`n[+] Deploying pgAdmin..."
 kubectl apply -f k8s/pgadmin.yaml
-
-# --- Deploy LoadBalancer Service ---
-Write-Host "`n[+] Deploying LoadBalancer service for caller-app..."
-kubectl apply -f k8s/loadbalancer.yaml
 
 # --- Deploy Applications ---
 Write-Host "`n[+] Deploying processor-api and caller-app..."
@@ -42,13 +44,11 @@ kubectl rollout restart deployment postgres
 kubectl rollout restart deployment pgadmin
 
 # --- Wait for Pods ---
-# Write-Host "`nWaiting for pods to be ready..."
-# kubectl wait --for=condition=ready pod -l app=caller-app --timeout=60s
-# kubectl wait --for=condition=ready pod -l app=processor-api --timeout=60s
-# kubectl wait --for=condition=ready pod -l app=postgres --timeout=60s
-# kubectl wait --for=condition=ready pod -l app=pgadmin --timeout=60s
-
-Write-Host "`n[+] All services deployed successfully!"
+Write-Host "`nWaiting for pods to be ready... (This might take a few minutes)"
+kubectl wait --for=condition=ready pod -l app=caller-app --timeout=120s
+kubectl wait --for=condition=ready pod -l app=processor-api --timeout=120s
+kubectl wait --for=condition=ready pod -l app=postgres --timeout=120s
+kubectl wait --for=condition=ready pod -l app=pgadmin --timeout=120s
 
 # --- Launch Dashboard and Apps (optional in background) ---
 
@@ -64,13 +64,16 @@ Start-Job { minikube dashboard }
 # Write-Host "`nStarting pgAdmin..."
 # Start-Job { minikube service pgadmin }
 
-## --- Display Access URLs ---
-# Write-Host "`n[OK] All services deployed successfully!"
-# Write-Host ""
-# Write-Host "Service URLs (via Ingress):"
-# $minikubeIp = (minikube ip).Trim()
-# Write-Host "  CallerApp      => http://$minikubeIp/caller"
-# Write-Host "  Processor API  => http://$minikubeIp/processor"
-# Write-Host "  pgAdmin        => http://$minikubeIp/pgadmin"
-# Write-Host "  Minikube Dashboard => Run: minikube dashboard"
 
+Write-Host "`n[OK] All services deployed successfully!"
+Write-Host ""
+Write-Host ">>> IMPORTANT: RUN minikube tunnel <<<"
+Write-Host "To access your applications, you must run the following command in a separate terminal with administrator privileges:"
+Write-Host ""
+Write-Host "  minikube tunnel"
+Write-Host ""
+Write-Host "Once 'minikube tunnel' is running, you can access your services via:"
+Write-Host "  CallerApp      => http://localhost:9001/caller"
+Write-Host "  Processor API  => http://localhost:9002/processor"
+Write-Host "  pgAdmin        => http://localhost:9003/pgadmin"
+Write-Host "  Minikube Dashboard => Run: minikube dashboard"

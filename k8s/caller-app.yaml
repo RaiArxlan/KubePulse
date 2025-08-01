@@ -47,10 +47,10 @@ metadata:
   labels:
     app: caller-app
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: caller-app
   ports:
     - name: http
-      port: 80
+      port: 9001
       targetPort: 8080
