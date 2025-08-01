@@ -7,9 +7,9 @@ public class ControlModel : PageModel
 {
     private readonly RequestWorker _worker;
 
-    [BindProperty] public int Interval { get; set; } = 5;
-    [BindProperty] public int BurstCount { get; set; } = 1;
-    [BindProperty] public string ServiceUrl { get; set; } = "http://processorapi:8080/process";
+    [BindProperty] public int Interval { get; set; }
+    [BindProperty] public int BurstCount { get; set; }
+    [BindProperty] public string ServiceUrl { get; set; }
 
     public bool IsRunningSuccessfully => _worker.IsRunningSuccessfully();
     public bool IsPaused => _worker.IsPaused();
@@ -17,6 +17,9 @@ public class ControlModel : PageModel
     public ControlModel(RequestWorker worker)
     {
         _worker = worker;
+        ServiceUrl = _worker.GetUrl();   
+        BurstCount = _worker.GetBurst();   
+        Interval = _worker.GetInterval();   
     }
 
     public void OnPost()

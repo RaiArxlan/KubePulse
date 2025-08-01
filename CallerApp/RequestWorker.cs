@@ -12,8 +12,11 @@ public class RequestWorker : BackgroundService
     public RequestWorker(IHttpClientFactory factory) => _factory = factory;
 
     public void SetInterval(int sec) => _interval = Math.Max(1, sec);
+    public int GetInterval() => _interval;
     public void SetBurst(int count) => _burstCount = Math.Max(1, count);
-    public void SetUrl(string url) => _url = url?.Trim();
+    public int GetBurst() => _burstCount;
+    public void SetUrl(string url) => _url = url?.Trim() ?? "";
+    public string GetUrl() => _url;
     public void Pause() => _paused = true;
     public void Resume() => _paused = false;
     public bool IsRunningSuccessfully() => _isRunning && !_paused;
