@@ -6,7 +6,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
 spec:
   rules:
-    - host: localhost
+    - host: #localhost # Removed 'host: localhost' rule as we cannot modify hosts file in non-admin environment
       http:
         paths:
           - path: /caller
@@ -27,6 +27,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: pgadmin-service
+                name: pgadmin
                 port:
                   number: 80

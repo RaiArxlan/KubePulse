@@ -5,7 +5,7 @@ metadata:
   labels:
     app: processor-api
 spec:
-  replicas: 1
+  replicas: 1 # HPA will manage this
   selector:
     matchLabels:
       app: processor-api
@@ -45,10 +45,10 @@ kind: Service
 metadata:
   name: processor-api
 spec:
-  type: NodePort
+  type: ClusterIP # NodePort or ClusterIP
   selector:
     app: processor-api
   ports:
     - port: 80
       targetPort: 8080
-      nodePort: 30081
+      # nodePort: 30081 # not required when running behind a load balancer

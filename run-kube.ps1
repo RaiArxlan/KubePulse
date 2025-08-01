@@ -1,39 +1,37 @@
-# run-kube.ps1
-
-# Fail on error
+# Stop on error
 $ErrorActionPreference = "Stop"
 
-Write-Host "`nConfiguring Docker to use Minikube..."
+Write-Host "`n[+] Configuring Docker to use Minikube environment..."
 & minikube -p minikube docker-env --shell=powershell | Invoke-Expression
 
-# --- Build Images ---
-Write-Host "`nBuilding Docker images for caller-app and processor-api..."
+# --- Build Docker Images ---
+Write-Host "`n[+] Building Docker images for caller-app and processor-api..."
 docker build -t kubepulse/caller-app:latest ./CallerApp
 docker build -t kubepulse/processor-api:latest ./ProcessorApi
 
-# --- Apply Postgres Config ---
-Write-Host "`nDeploying Postgres and PVC..."
+# --- Deploy Postgres + PVC ---
+Write-Host "`n[+] Deploying Postgres and PVC..."
 kubectl apply -f k8s/postgres.yaml
 
 # --- Deploy pgAdmin ---
-Write-Host "`nDeploying pgAdmin..."
+Write-Host "`n[+] Deploying pgAdmin..."
 kubectl apply -f k8s/pgadmin.yaml
 
-# --- Apply Applications ---
-Write-Host "`nDeploying processor-api and caller-app..."
+# --- Deploy Applications ---
+Write-Host "`n[+] Deploying processor-api and caller-app..."
 kubectl apply -f k8s/processor-api.yaml
 kubectl apply -f k8s/caller-app.yaml
 
-# --- Apply HPA ---
-Write-Host "`nDeploying Horizontal Pod Autoscaler..."
+# --- Deploy HPA ---
+Write-Host "`n[+] Deploying Horizontal Pod Autoscaler..."
 kubectl apply -f k8s/hpa.yaml
 
-# --- Apply Ingress ---
-Write-Host "`nDeploying Ingress Controller..."
+# --- Apply Ingress Rules ---
+Write-Host "`n[+] Applying ingress rules..."
 kubectl apply -f k8s/ingress.yaml
 
-# --- Restart Services ---
-Write-Host "`nRestarting Deployments..."
+# --- Restart Deployments ---
+Write-Host "`n[+] Restarting all deployments..."
 kubectl rollout restart deployment caller-app
 kubectl rollout restart deployment processor-api
 kubectl rollout restart deployment postgres
@@ -46,22 +44,29 @@ kubectl rollout restart deployment pgadmin
 # kubectl wait --for=condition=ready pod -l app=postgres --timeout=60s
 # kubectl wait --for=condition=ready pod -l app=pgadmin --timeout=60s
 
-Write-Host "`nAll services deployed successfully!"
+Write-Host "`n[+] All services deployed successfully!"
+
+# --- Launch Dashboard and Apps (optional in background) ---
 
 # --- Start Minikube dashboard ---
-Write-Host "`nStarting Minikube dashboard..."
+Write-Host "`n[+] Starting Minikube dashboard..."
 Start-Job { minikube dashboard }
 
-# --- Start Caller App ---
+## --- Start Caller App ---
 # Write-Host "`nStarting Caller App..."
 # Start-Job { minikube service caller-app }
 
-# --- Start pgAdmin ---
+## --- Start pgAdmin ---
 # Write-Host "`nStarting pgAdmin..."
 # Start-Job { minikube service pgadmin }
 
-# Informing user about application start
-# Write-Host "`nAccess your services via:"
-# Write-Host "  http://kubepulse.local/caller"
-# Write-Host "  http://kubepulse.local/processor"
-# Write-Host "  http://kubepulse.local/pgadmin"
+## --- Display Access URLs ---
+# Write-Host "`n[OK] All services deployed successfully!"
+# Write-Host ""
+# Write-Host "Service URLs (via Ingress):"
+# $minikubeIp = (minikube ip).Trim()
+# Write-Host "  CallerApp      => http://$minikubeIp/caller"
+# Write-Host "  Processor API  => http://$minikubeIp/processor"
+# Write-Host "  pgAdmin        => http://$minikubeIp/pgadmin"
+# Write-Host "  Minikube Dashboard => Run: minikube dashboard"
+
