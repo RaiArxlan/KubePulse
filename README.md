@@ -26,7 +26,7 @@ KubePulse/
 
 ### ✅ Prerequisites
 
-* [.NET 8 SDK](https://dotnet.microsoft.com/)
+* [.NET 9 SDK](https://dotnet.microsoft.com/)
 * [Minikube](https://minikube.sigs.k8s.io/)
 * [Docker](https://www.docker.com/)
 * [kubectl](https://kubernetes.io/docs/tasks/tools/) (optional)
@@ -40,31 +40,43 @@ KubePulse/
 ```powershell
 minikube start --driver=docker
 minikube addons enable metrics-server
+minikube addons enable ingress
 ```
 
 #### 2\. Build Docker Images Inside Minikube
 
 ```powershell
-& minikube -p minikube docker-env | Invoke-Expression
+& minikube -p minikube docker-env --shell=powershell | Invoke-Expression
 
 docker build -t kubepulse/caller-app:latest ./CallerApp
 docker build -t kubepulse/processor-api:latest ./ProcessorApi
 ```
 
-#### 3\. Apply Kubernetes Resources
+#### 3\. Deploy All Resources (Automated)
+
+Run the provided PowerShell script to automate deployment:
 
 ```powershell
-kubectl apply -f k8s/postgres.yaml
-kubectl apply -f k8s/processor-api.yaml
-kubectl apply -f k8s/caller-app.yaml
-kubectl apply -f k8s/hpa.yaml
+.\run-kube.ps1
 ```
 
-#### 4\. Access the UI
+This script will:
 
-```powershell
-minikube service caller-app
-```
+* Configure Docker to use Minikube
+* Enable required Minikube addons
+* Build Docker images
+* Apply all Kubernetes manifests (Postgres, pgAdmin, apps, HPA, Ingress)
+* Restart deployments and wait for pods to be ready
+* Start the Minikube dashboard in the background
+
+#### 4\. Access Your Applications
+
+* Run `minikube tunnel` in a separate terminal (with admin privileges) to expose LoadBalancer services.
+* Once the tunnel is running, access your services at:
+  * CallerApp: [http://localhost:9001/caller](http://localhost:9001/caller)
+  * Processor API: [http://localhost:9002/processor](http://localhost:9002/processor)
+  * pgAdmin: [http://localhost:9003/pgadmin](http://localhost:9003/pgadmin)
+  * Minikube Dashboard: Run `minikube dashboard`
 
 * * *
 
@@ -74,7 +86,7 @@ minikube service caller-app
 * Requests hit the **ProcessorApi**, which:
   * Logs `StartTime` and `EndTime` in the database
   * Waits for a random delay (0–5 seconds) to simulate load
-* Kubernetes HPA automatically scales the `processor-api` deployment based on CPU usage
+* Kubernetes HPA automatically scales the `processor-api` deployment based on CPU and memory usage.
 
 * * *
 
@@ -112,7 +124,7 @@ kubectl get pods -w
 
 ## 🛠 Tech Stack
 
-* ASP.NET Core 8 (Razor Pages + Web API)
+* ASP.NET Core 9 (Razor Pages + Web API)
 * PostgreSQL
 * Docker
 * Kubernetes + Minikube
@@ -120,13 +132,14 @@ kubectl get pods -w
 
 * * *
 
-## 📄 License
+## 👤 About the Author
 
-MIT License
+**Rai Arslan**  
+Full-Stack Software Engineer | 6+ years experience
 
-* * *
+* 💡 Passionate about open source, ERP, CMS, and freelance projects
+* 📬 Reach out via [email](mailto:raiarxlan@gmail.com)
+* 💼 Connect on [LinkedIn](https://www.linkedin.com/in/raiarxlan/)
+* 💻 Explore my work on [GitHub](https://github.com/RaiArxlan/)
 
-## 🧠 Want to Learn Architecture Like This?
-
-Built by [Software Architect GPT](https://sammuti.com) 🤖  
-Need help designing scalable software systems? Let’s talk.
+Feel free to connect or collaborate!
