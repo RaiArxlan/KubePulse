@@ -1,0 +1,13 @@
+@ProcessorApi_HostAddress = https://localhost:7233
+
+GET {{ProcessorApi_HostAddress}}/
+
+###
+
+GET {{ProcessorApi_HostAddress}}/Logs
+
+###
+
+GET {{ProcessorApi_HostAddress}}/process
+
+###
