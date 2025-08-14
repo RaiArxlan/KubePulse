@@ -122,6 +122,19 @@ kubectl get pods -w
 
 * * *
 
+## Screenshots
+
+* Traffic Generator  
+  ![Traffic Generator](docs/Traffic-Controller.png)
+
+* High number of incoming requests  
+  ![High number of incoming requests](docs/RabbitMq-Traffic.png)
+
+* Number of requests from Database  
+  ![Number of requests from Database](docs/Postgres-Incoming-Requests.png)
+
+* * *
+
 ## 🛠 Tech Stack
 
 * ASP.NET Core 9 (Razor Pages + Web API)
@@ -129,6 +142,7 @@ kubectl get pods -w
 * Docker
 * Kubernetes + Minikube
 * Horizontal Pod Autoscaler
+* RabbitMq
 
 * * *
 
