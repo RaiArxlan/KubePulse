@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using ProcessorApi.Interface;
 using ProcessorApi.Models;
+using ProcessorApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var isDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
@@ -7,7 +9,9 @@ var connectionString = isDocker
     ? builder.Configuration.GetConnectionString("DockerConnectionString")
     : builder.Configuration.GetConnectionString("DefaultConnection");
 
-builder.Services.AddDbContext<RequestDbContext>(opt => { opt.UseNpgsql(connectionString); });
+builder.Services.AddHostedService<ProcessConsumerService>();
+builder.Services.AddSingleton<IRabbitMqPublisher, RabbitMqPublisher>();
+builder.Services.AddDbContextFactory<RequestDbContext>(opt => { opt.UseNpgsql(connectionString); });
 builder.Services.AddControllers();
 
 if (isDocker)

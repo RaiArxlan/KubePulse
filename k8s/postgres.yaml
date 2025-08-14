@@ -60,9 +60,9 @@ spec:
               memory: "1Gi"
       volumes:
         - name: pgdata
-          # emptyDir: {} # dev only, comment this in prod
-          persistentVolumeClaim: # prod only, uncomment this in prod
-            claimName: pg-pvc
+          emptyDir: {} # dev only, comment this in prod
+          # persistentVolumeClaim: # prod only, uncomment this in prod
+          #   claimName: pg-pvc
 ---
 apiVersion: v1
 kind: Service

@@ -17,7 +17,7 @@ spec:
       containers:
         - name: caller-app
           image: kubepulse/caller-app:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Never
           ports:
             - containerPort: 8080
           resources:

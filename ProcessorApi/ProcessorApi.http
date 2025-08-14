@@ -1,4 +1,8 @@
-@ProcessorApi_HostAddress = https://localhost:7233
+# running app in docker-compose
+# @ProcessorApi_HostAddress = https://localhost:9002
+
+# running app in minikue
+@ProcessorApi_HostAddress = https://localhost:9002
 
 GET {{ProcessorApi_HostAddress}}/
 
@@ -11,3 +15,9 @@ GET {{ProcessorApi_HostAddress}}/Logs
 GET {{ProcessorApi_HostAddress}}/process
 
 ###
+
+GET {{ProcessorApi_HostAddress}}/process2
+
+###
+
+GET {{ProcessorApi_HostAddress}}/ProcessWithMessageQueue

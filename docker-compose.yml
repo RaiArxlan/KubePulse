@@ -10,19 +10,20 @@ services:
         ports:
           - 5432:5432
     
-    callerapp:
+    caller-app:
         image: ${DOCKER_REGISTRY-}callerapp
         build:
-            context: .
-            dockerfile: CallerApp/Dockerfile
+            context: ./CallerApp
+            dockerfile: Dockerfile
 
-    processorapi:
+    processor-api:
         image: ${DOCKER_REGISTRY-}processorapi
         build:
-            context: .
-            dockerfile: ProcessorApi/Dockerfile
+            context: ./ProcessorApi
+            dockerfile: Dockerfile
         depends_on:
             - postgres
+            - rabbitmq
 
     pgadmin:
         image: dpage/pgadmin4
@@ -36,6 +37,19 @@ services:
         depends_on:
           - postgres
 
+    rabbitmq:
+        image: rabbitmq:3-management
+        container_name: rabbitmq
+        ports:
+          - "5672:5672"   # AMQP protocol
+          - "15672:15672" # Management UI
+        environment:
+          RABBITMQ_DEFAULT_USER: user
+          RABBITMQ_DEFAULT_PASS: password
+        volumes:
+          - rabbitmq-data:/var/lib/rabbitmq
+
 volumes:
     pgdata:
     pgadmin-data:
+    rabbitmq-data:
