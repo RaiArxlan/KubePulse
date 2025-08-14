@@ -8,7 +8,7 @@ spec:
     kind: Deployment
     name: processor-api
   minReplicas: 1
-  maxReplicas: 5 # For testing, keep at 1. For real scaling, increase maxReplicas.
+  maxReplicas: 1 # For testing, keep at 1. For real scaling, increase maxReplicas.
   metrics:
     - type: Resource
       resource:

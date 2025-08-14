@@ -1,6 +1,9 @@
 # Stop on error
 $ErrorActionPreference = "Stop"
 
+# --- Printing Current Date & Time ---
+Write-Host "`n[+] Script Execution Start Time: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+
 # --- Starting a stop watch to meantoring the script execution time ---
 $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 
@@ -9,7 +12,7 @@ Write-Host "`n[+] Checking if Minikube is running..."
 $minikubeStatus = & minikube status --format "{{.Host}}"
 if ($minikubeStatus -ne "Running") {
     Write-Host "`n[!] Minikube is not running. Starting Minikube..."
-    & minikube start --driver=docker #--cpus=4 --memory=4096 --disk-size=20g
+    & minikube start --driver=docker #--cpus=4 --memory=4096 --disk-size=20g these are wrong values. CPUs=2, Memory=3869MB these are currently running valid values
 }
 else {
     Write-Host "`n[+] Minikube is already running."
@@ -125,7 +128,7 @@ Write-Host "Once 'minikube tunnel' is running, you can access your services via:
 Write-Host "  CallerApp      => http://localhost:9001/control"
 Write-Host "  Processor API  => http://localhost:9002/process, http://localhost:9002/process2, http://localhost:9002/ProcessWithMessageQueue"
 Write-Host "  pgAdmin        => http://localhost:9003/"
-Write-Host "  Minikube Dashboard => Run: minikube dashboard"
+Write-Host "  Minikube Dashboard will open in browser automatically, port allocation is dynamic."
 
 # --- Stop the stopwatch and display the elapsed time ---
 $stopwatch.Stop()
